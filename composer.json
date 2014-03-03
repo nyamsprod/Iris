@@ -1,0 +1,30 @@
+{
+    "name" : "Iris",
+    "type" : "library",
+    "description" : "Curl Wrapper to ease curl* and curl_Envelope* functions",
+    "keywords" : ["curl", "http", "Envelope", "communication"],
+    "license" : "MIT",
+    "require" : {
+        "php" : ">=5.3.0",
+        "ext-curl" : "*"
+    },
+    "autoload" : {
+        "psr-4": {
+            "Iris\\" : "src"
+        }
+    },
+    "authors": [
+        {
+            "name" : "Ignace Nyamagana Butera",
+            "email" : "ignace.nyamagana@rentabiliweb.com",
+            "homepage" : "https://git.int.rtblw.com/u/ignace.nyamagana",
+            "role" : "Developer"
+        },
+        {
+            "name" : "Bertrand Andres",
+            "email" : "bertrand.andres@rentabiliweb.com",
+            "homepage" : "https://git.int.rtblw.com/u/bertrand.andres",
+            "role" : "Developer"
+        }        
+    ]
+}
