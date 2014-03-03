@@ -1,7 +1,7 @@
 {
     "name" : "Iris",
     "type" : "library",
-    "description" : "Curl Wrapper to ease curl* and curl_multi* functions",
+    "description" : "Curl Wrapper to ease curl* and curl_multi* functions usage",
     "keywords" : ["curl", "http", "communication"],
     "license" : "MIT",
     "require" : {
