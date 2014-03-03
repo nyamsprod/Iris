@@ -55,6 +55,7 @@ the `setOption` method can accept an `array` as a single value or a cURL options
 $request->setOption(CURLOPT_NOBODY, true);
 //or
 $request->setOption([CURLOPT_NOBODY => true, CURLOPT_HEADER_OUT => true]);
+```
 
 The options can be changed and altered at any given times before performing the request as their are applied only when the request is performed.
 
@@ -124,7 +125,7 @@ You do not need to use the `Message::execute` method as it is called directly by
 ```php
 
 $request = new \Iris\Message;
-$request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...], **true**);
+$request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...], true);
 ```
 The request is registered but not execute, **you will need the `Message::execute`** to perform the request.
 
