@@ -9,12 +9,16 @@ This package is compliant with [PSR-1], [PSR-2], and [PSR-4].
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
+`Iris` is loosely based around [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But I would strongly advice anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) when possible**.
+
 
 ## Requirements
 
 You need **PHP >= 5.3.0** and the `cURL` extension to use `Iris` but the latest stable version of PHP is recommended.
 
 ## Usage
+
+Remember ... [Guzzle](http://docs.guzzlephp.org/en/latest/) is your friend, but if you insist!!
 
 * [Sending a simple request](examples/example_one.php)
 * [Sending a batch of request](examples/example_batch.php)
@@ -25,6 +29,6 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [ignace nyamagana butera](https://git.int.rtblw.com/u/ignace.nyamagana)
-- [bertrand andres](https://git.int.rtblw.com/u/bertrand.andres)
+- [ignace nyamagana butera](https://github.com/nyamsprod)
+- [bertrand andres](https://youtube.com/user/BertrandAd)
 
