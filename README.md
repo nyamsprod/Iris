@@ -11,10 +11,33 @@ This package is compliant with [PSR-1], [PSR-2], and [PSR-4].
 
 `Iris` is loosely based around [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But I would strongly advice anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) when possible**.
 
+**`Iris` is not unit tested which is bad, Michael Jackson Bad!!** so please use [Guzzle](http://docs.guzzlephp.org/en/latest/) you'll have a A class experiment with tones of goodies!!
 
 ## Requirements
 
 You need **PHP >= 5.3.0** and the `cURL` extension to use `Iris` but the latest stable version of PHP is recommended.
+
+## Installation
+
+You may install the `Iris` package with Composer.
+
+```json
+{
+    "require": {
+        "Iris": "0.*"
+    }
+}
+``` 
+Or you can download the library and point to its autoloading script.
+
+```php
+<?php
+require '/path/to/iris/autoload.php';
+
+use \Iris\Message;
+
+$request = new Message;
+```
 
 ## Usage
 
