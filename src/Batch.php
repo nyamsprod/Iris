@@ -3,6 +3,7 @@
 namespace Iris;
 
 use RuntimeException;
+use Traversable;
 
 /**
  * A class to perform parallel requests using {@link Message} an {@link Envelope} objects
@@ -44,12 +45,17 @@ class Batch
     /**
      * Add a Collection of {@link Message} objects
      *
-     * @param \Iris\MessageQueue $pool
+     * @param \Traversable $pool
      *
      * @return self
      */
-    public function addPool(MessageQueue $pool)
+    public function addMany($pool)
     {
+        if (! is_array($pool) || ! $pool instanceof Traversable) {
+            throw new InvalidArgumentException(
+                'the \Iris\Message object must be provided using a Traversable object or an array'
+            );
+        }
         foreach ($pool as $data) {
             $this->add($data);
         }
@@ -64,7 +70,7 @@ class Batch
      *
      * @return self
      */
-    public function add(Message $data)
+    public function addOne(Message $data)
     {
         $this->container->enqueue($data);
 
