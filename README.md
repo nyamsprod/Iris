@@ -152,7 +152,7 @@ $request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', .
 ```
 The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or `P\Iris\Batch::execute`** to perform the request.
 
-### P\Iris\Envelope
+### Iris\Envelope
 
 This class is responsible for wrapping `curl_multi_*` function. **As it is you could use it to perform parallel calls using `cURL` but really don't, there's a simpler way using `\P\Iris\Batch`**.
 
@@ -167,7 +167,7 @@ The sole purpose of this function is to configure how `cURL` may behave when usi
     * The `selectTimeout` must be a float;
     * The `execTimeout`  must be a integer;
 
-### \P\Iris\Batch
+### Iris\Batch
 
 #### Instantiation
 
