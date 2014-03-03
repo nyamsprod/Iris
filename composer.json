@@ -1,5 +1,5 @@
 {
-    "name" : "P/Iris",
+    "name" : "p/iris",
     "type" : "library",
     "description" : "Curl Wrapper to ease curl* and curl_multi* functions usage",
     "keywords" : ["curl", "http", "communication"],
