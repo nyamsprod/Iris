@@ -7,7 +7,7 @@ ini_set('display_errors', 'On');
 
 require '../autoload.php';
 
-$curl = new \Iris\Message;
+$curl = new \P\Iris\Message;
 
 $curl->get('http://www.reddit.com/r/PHP');
 var_dump($curl->getInfo(CURLINFO_HTTP_CODE));

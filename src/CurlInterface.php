@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris;
+namespace P\Iris;
 
 /**
  * Interface for Iris cURL classes

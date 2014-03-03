@@ -1,9 +1,10 @@
 <?php
 
-namespace Iris;
+namespace P\Iris;
 
 use RuntimeException;
 use Traversable;
+use InvalidArgumentException;
 
 /**
  * A class to perform parallel requests using {@link Message} an {@link Envelope} objects
@@ -51,13 +52,13 @@ class Batch
      */
     public function addMany($pool)
     {
-        if (! is_array($pool) || ! $pool instanceof Traversable) {
+        if (! is_array($pool) && ! $pool instanceof Traversable) {
             throw new InvalidArgumentException(
                 'the \Iris\Message object must be provided using a Traversable object or an array'
             );
         }
         foreach ($pool as $data) {
-            $this->add($data);
+            $this->addOne($data);
         }
 
         return $this;

@@ -6,7 +6,7 @@
  */
 
 spl_autoload_register(function ($class) {
-    $prefix = 'Iris\\';
+    $prefix = 'P\\Iris\\';
     $base_dir = __DIR__ . '/src/';
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {

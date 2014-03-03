@@ -1,6 +1,6 @@
 <?php
 
-namespace Iris;
+namespace P\Iris;
 
 use SplQueue;
 use InvalidArgumentException;
