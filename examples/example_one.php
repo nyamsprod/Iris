@@ -9,7 +9,7 @@ require '../autoload.php';
 
 $curl = new \Iris\Message;
 
-$curl->get('http://www.carpediem.fr');
+$curl->get('http://www.reddit.com/r/PHP');
 var_dump($curl->getInfo(CURLINFO_HTTP_CODE));
 echo $curl->getResponse();
 // a la fin de execute;

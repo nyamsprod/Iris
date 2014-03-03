@@ -25,7 +25,7 @@ $onSuccess = function ($res, $curl) use ($curl2, $batch, $onFailure) {
     if ($curl === $curl2) {
         $curl4 = new \Iris\Message;
         $curl4->setOption([
-            CURLOPT_URL => 'http://www.carpediem.fr',
+            CURLOPT_URL => 'http://www.thephpleague.com',
             CURLOPT_RETURNTRANSFER => true,
         ]);
         $curl4->addListener(\Iris\Message::EVENT_ON_SUCCESS, function ($res, $curl) {
@@ -41,7 +41,7 @@ $onSuccess = function ($res, $curl) use ($curl2, $batch, $onFailure) {
 $curl1 = new \Iris\Message;
 $curl1
     ->setOption([
-        CURLOPT_URL => 'http://www.eurolive.com',
+        CURLOPT_URL => 'http://www.reddit.com',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_NOBODY => true,
     ])
@@ -50,7 +50,7 @@ $curl1
 
 $curl2
     ->setOption([
-        CURLOPT_URL => 'http://www.yesmessenger.com',
+        CURLOPT_URL => 'http://www.phpdeveloper.org',
         CURLOPT_RETURNTRANSFER => false,
         CURLOPT_NOBODY => true,
     ])
@@ -68,11 +68,7 @@ $curl3
     ->addListener(\Iris\Message::EVENT_ON_SUCCESS, $onSuccess)
     ->addListener(\Iris\Message::EVENT_ON_ERROR, $onFailure);
 
-$pool = new \Iris\MessageQueue; //conteneur d'Objet \Iris\Message
-$pool->enqueue($curl1);
-$pool->enqueue($curl3);
-
 $batch
-    ->add($curl2) //on peut ajouter a batch un objet  \Iris\Message
-    ->addPool($pool) //on peut soumettre a batch un pool d'objet \Iris\Message
+    ->addOne($curl2) //on peut ajouter a batch un objet  \Iris\Message
+    ->addMany([$curl1, $curl3]) //on peut soumettre a batch un pool d'objet \Iris\Message
     ->execute();
