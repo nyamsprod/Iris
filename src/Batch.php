@@ -36,12 +36,16 @@ class Batch implements Countable
     /**
      * The Constructor
      *
-     * @param \P\Iris\Envelope $handle The main handler
+     * @param \P\Iris\Envelope $handle    The main handler
+     * @param mixed            $container a collection of {@link Message} objects
      */
-    public function __construct(Envelope $handle)
+    public function __construct(Envelope $handle, $container = null)
     {
         $this->handle = $handle;
         $this->container = new MessageQueue;
+        if (! is_null($container)) {
+            $this->addMany($container);
+        }
     }
 
     /**
