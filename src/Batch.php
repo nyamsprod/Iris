@@ -5,28 +5,29 @@ namespace P\Iris;
 use RuntimeException;
 use Traversable;
 use InvalidArgumentException;
+use Countable;
 
 /**
  * A class to perform parallel requests using {@link Message} an {@link Envelope} objects
  */
-class Batch
+class Batch implements Countable
 {
     /**
      * Envelope curl handler
      *
-     * @var \Iris\Envelope
+     * @var \P\Iris\Envelope
      */
     private $handle;
 
     /**
-     * contain all the \Iris\Message objects
+     * contain all the {@link Message} objects
      *
-     * @var \Iris\MessageQueue
+     * @var \P\Iris\MessageQueue
      */
     private $container;
 
     /**
-     * contain the currently use \Iris\Message object
+     * contain the currently use {@link Message} object
      *
      * @var array
      */
@@ -35,12 +36,22 @@ class Batch
     /**
      * The Constructor
      *
-     * @param \Iris\Envelope $handle The main handler
+     * @param \P\Iris\Envelope $handle The main handler
      */
     public function __construct(Envelope $handle)
     {
         $this->handle = $handle;
         $this->container = new MessageQueue;
+    }
+
+    /**
+     * returns the numbers of {@link Message} objects present
+     *
+     * @return integer
+     */
+    public function count()
+    {
+        return count($this->container);
     }
 
     /**
@@ -54,7 +65,7 @@ class Batch
     {
         if (! is_array($pool) && ! $pool instanceof Traversable) {
             throw new InvalidArgumentException(
-                'the \Iris\Message object must be provided using a Traversable object or an array'
+                'the `\P\Iris\Message` object must be provided using a Traversable object or an array'
             );
         }
         foreach ($pool as $data) {
@@ -67,7 +78,7 @@ class Batch
     /**
      * Add a {@link Message} object
      *
-     * @param \Iris\Message $data
+     * @param \P\Iris\Message $data
      *
      * @return self
      */
@@ -79,7 +90,7 @@ class Batch
     }
 
     /**
-     * Queue and Execute all the requests
+     * queue and execute the {@link Message} object
      *
      * @return self
      */
@@ -115,11 +126,11 @@ class Batch
     }
 
     /**
-     * find the cURL handler index in the queue
+     * find the {@link Message} index in the queue
      *
      * @return integer
      *
-     * @throws RuntimeException If no resource is found
+     * @throws \RuntimeException If no resource is found
      */
     private function find($resource)
     {
@@ -133,7 +144,7 @@ class Batch
     }
 
     /**
-     * Process the result of the Envelope cURL request
+     * Process the result of {@link Message} object
      */
     private function process()
     {
