@@ -9,9 +9,11 @@ This package is compliant with [PSR-1], [PSR-2], and [PSR-4].
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-`Iris` is loosely based around [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But I would strongly advice anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) when possible**.
+`Iris` was built to understand how `cURL` function work. It is loosely based on [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But we strongly recommend anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) instead**.
 
-**`Iris` is not unit tested which is bad, Michael Jackson's Bad!!** so please use instead [Guzzle](http://docs.guzzlephp.org/en/latest/) you'll have a A class experiment with tones of goodies!!
+## Features & Roadmap
+
+- [TODO] Add Unit Testing
 
 ## Requirements
 
@@ -40,8 +42,6 @@ $request = new Message;
 ```
 
 ## Usage
-
-Remember ... [Guzzle](http://docs.guzzlephp.org/en/latest/) is your friend!!
 
 * [Sending a simple request](examples/example_one.php)
 * [Sending a batch of request](examples/example_batch.php)
@@ -77,7 +77,10 @@ the `setOption` method can accept an `array` as a single value or a cURL options
 ```php
 $request->setOption(CURLOPT_NOBODY, true);
 //or
-$request->setOption([CURLOPT_NOBODY => true, CURLOPT_HEADER_OUT => true]);
+$request->setOption([
+    CURLOPT_NOBODY => true,
+    CURLOPT_HEADER_OUT => true
+]);
 ```
 
 The options can be changed and altered at any given times before performing the request as their are applied only when the request is performed.
@@ -96,9 +99,10 @@ $request->getResponse();
 ```
 
 You'll get access to:
-* the response by using the `Message::getResponse` method.
-* the `cURL` request information using the `Message::getInfo` method. This method by default return an array of all available information. If you are only interested in one value then use its CURLOPT_* index;
-* the `cURL` error message using `Message::getErrorCode` and Message::getErrorMessage` methods;
+
+* the response by using the `P\Iris\Message::getResponse` method.
+* the `cURL` request information using the `P\Iris\Message::getInfo` method. This method by default return an array of all available information. If you are only interested in one value then use its `CURLINFO_*` index;
+* the `cURL` error message using `P\Iris\Message::getErrorCode` and `P\Iris\Message::getErrorMessage` methods;
 
 ### Using Events
 
@@ -110,10 +114,10 @@ $request->setUserAgent('My beautiful user agent/1.0');
 $request->setOption(CURLOPT_URL, 'http://www.example.com');
 $request->setOption(CURLOPT_RETURNTRANSFER, true);
 $request->addListener(P\Iris\Message::EVENT_ON_SUCCESS, function ($res, $curl) {
- echo $curl->getInfo(CURLOPTINFO_HTTP_CODE); //should be 200;
+    echo $curl->getInfo(CURLOPTINFO_HTTP_CODE); //return the Status Code
 });
 $request->addListener(P\Iris\Message::EVENT_ON_ERROR, function ($res, $curl) {
- echo $curl->getErrorCode().': '. $curl->getErrorMessage();
+    echo $curl->getErrorCode().': '. $curl->getErrorMessage();
 });
 $request->execute();
 ```
@@ -140,21 +144,29 @@ Here's a simple example:
 ```php
 
 $request = new P\Iris\Message;
+$request->addListener(P\Iris\Message::EVENT_ON_SUCCESS, function ($res, $curl) {
+    echo $request->getResponse();
+});
+$request->addListener(P\Iris\Message::EVENT_ON_ERROR, function ($res, $curl) {
+    echo $curl->getErrorCode().': '. $curl->getErrorMessage();
+});
 $request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...]);
-$request->getResponse();
+
 ```
-You do not need to use the `Message::execute` method as it is called directly by the `Message::get` method. If you do not want the request to be directly issue then you have to specify it using the **third argument**.
+You do not need to use the `P\Iris\Message::execute` method as it is called directly by the `P\Iris\Message::get` method. If you do not want the request to be directly issue then you have to specify it using the **third argument**.
 
 ```php
 
 $request = new P\Iris\Message;
 $request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...], true);
+$request->execute();
+echo $request->getResponse();
 ```
 The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or `P\Iris\Batch::execute`** to perform the request.
 
 ### Iris\Envelope
 
-This class is responsible for wrapping `curl_multi_*` function. **As it is you could use it to perform parallel calls using `cURL` but really don't, there's a simpler way using `\P\Iris\Batch`**.
+This class is responsible for wrapping `curl_multi_*` function. **As it is you could use it to perform parallel calls using `cURL` but really don't, there's a simpler way using `P\Iris\Batch`**.
 
 The sole purpose of this function is to configure how `cURL` may behave when using parallel request. You can specify:
 
@@ -176,7 +188,7 @@ This class was build to simplify parallel calls. To instantiate this class you m
 ```php
 <?php
 $envelope = new \P\Iris\Envelope;
-$envelope->setTimeout(10.00);
+$envelope->setSelectTimeout(10.00);
 $evenlope->setExecTimeout(100);
 $envelope->setOption(Iris\Envelope::MAXCONNECTS, 3);
 $batch = new \P\Iris\Batch($enveloppe);
@@ -192,6 +204,12 @@ To do so you can use the `\P\Iris\Batch::addOne` function that will had a single
 $batch->addOne($request);
 //or
 $batch->addMany([$request1, $request2]);
+```
+
+At any given time you can count the number of  `\P\Iris\Message` objects present in the `\P\Iris\Batch` object. This number will decrease as the object performs the requests.
+
+```php
+$nb_messages = count($batch);
 ```
 
 #### Performing the requests
