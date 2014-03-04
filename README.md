@@ -9,7 +9,7 @@ This package is compliant with [PSR-1], [PSR-2], and [PSR-4].
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-`Iris` was built to understand `cURL` advance features. It is loosely based on [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But we strongly recommend anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) instead**.
+`Iris` was built to understand `cURL` advance features. It is loosely based on [phpmulticurl](https://github.com/dypa/phpmulticurl).
 
 ## Features & Roadmap
 
@@ -62,7 +62,7 @@ $request->setUserAgent('My beautiful user agent/1.0');
 Before anything else you may want to specify your own user agent. By defaut the library set its own user agent. You can override this behaviour by setting you own user agent using the `P\Iris\Message::setUserAgent` method. Once set, the user agent won't change even if you reset the `Iris\Message` object.
 
 
-At any given time you can reset the current `cURL` handler allowing you to perform multiple call using the same `P\Iris\Message` object. Once resetted, the object will loose any reference to the old request, except for the user agent. *This works really great with PHP5.5+* 
+At any given time you can reset the current `cURL` handler allowing you to perform multiple call using the same `P\Iris\Message` object. Once resetted, the object will loose any reference to the old request, except for the user agent and [the event listerners attached to it](#using-events).
 
 ```php
 $request->reset();
@@ -129,6 +129,7 @@ $request->addListener(Message::EVENT_ON_FAIL, function ($res, $curl) {
 $request->execute();
 ```
 Depending on the result of the `cURL` request one of the event will be called.
+Of course you can remove the callback by using the `P\Iris\Message::removeListener` with the same parameters used to add the callback.
 
 
 #### Simple Requests (GET, POST, PUT, DELETE, HEAD)
