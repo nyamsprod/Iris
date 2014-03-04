@@ -237,7 +237,7 @@ $batch->execute();
 
 Once you have added all the `\P\Iris\Message` objects you can safely perform you parallel requests using the `\P\Iris\Batch::execute` method.
 
-**When using the `\P\Iris\Batch` it is strongly advice to use `\P\Iris\Message` event listeners to process each `cURL` request individually.**
+**When using the `\P\Iris\Batch` you must use [`\P\Iris\Message` event listeners](#using-events) to process each `cURL` request individually.**
 
 ## Contribution
 
