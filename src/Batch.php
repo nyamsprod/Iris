@@ -6,6 +6,7 @@ use RuntimeException;
 use Traversable;
 use InvalidArgumentException;
 use Countable;
+use SplQueue;
 
 /**
  * A class to perform parallel requests using {@link Message} an {@link Envelope} objects
@@ -42,7 +43,7 @@ class Batch implements Countable
     public function __construct(Envelope $handle, $container = null)
     {
         $this->handle = $handle;
-        $this->container = new MessageQueue;
+        $this->container = new SplQueue;
         if (! is_null($container)) {
             $this->addMany($container);
         }
