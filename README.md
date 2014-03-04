@@ -9,7 +9,7 @@ This package is compliant with [PSR-1], [PSR-2], and [PSR-4].
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-`Iris` was built to understand how `cURL` function work. It is loosely based on [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But we strongly recommend anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) instead**.
+`Iris` was built to understand `cURL` advance features. It is loosely based on [phpmulticurl](https://github.com/dypa/phpmulticurl) . **But we strongly recommend anyone to use [Guzzle](http://docs.guzzlephp.org/en/latest/) instead**.
 
 ## Features & Roadmap
 
@@ -55,7 +55,7 @@ $request = new Message;
 to perform simple requests you need to instantiate the `P\Iris\Message` object.
 
 ```php
-$request = new P\Iris\Message;
+$request = new Message;
 $request->setUserAgent('My beautiful user agent/1.0');
 ```
 
@@ -90,7 +90,7 @@ The options can be changed and altered at any given times before performing the 
 To perform a request you need to call the `Iris\Message::execute` method.
 
 ```php
-$request = new P\Iris\Message;
+$request = new Message;
 $request->setUserAgent('My beautiful user agent/1.0');
 $request->setOption(CURLOPT_URL, 'http://www.example.com');
 $request->setOption(CURLOPT_RETURNTRANSFER, true);
@@ -109,14 +109,14 @@ You'll get access to:
 Another way to deal with the result of an cURL request is by using the event listener. The `\Iris\Message` comes with a simple event listener mechanism. You can register a callback function that will be executed on request success or on request error like explain below:
 
 ```php
-$request = new P\Iris\Message;
+$request = new Message;
 $request->setUserAgent('My beautiful user agent/1.0');
 $request->setOption(CURLOPT_URL, 'http://www.example.com');
 $request->setOption(CURLOPT_RETURNTRANSFER, true);
-$request->addListener(P\Iris\Message::EVENT_ON_SUCCESS, function ($res, $curl) {
+$request->addListener(Message::EVENT_ON_SUCCESS, function ($res, $curl) {
     echo $curl->getInfo(CURLOPTINFO_HTTP_CODE); //return the Status Code
 });
-$request->addListener(P\Iris\Message::EVENT_ON_ERROR, function ($res, $curl) {
+$request->addListener(Message::EVENT_ON_ERROR, function ($res, $curl) {
     echo $curl->getErrorCode().': '. $curl->getErrorMessage();
 });
 $request->execute();
@@ -136,33 +136,40 @@ The class comes with specialized method to perform usual calls used in REST API:
 
 These methods takes up to 3 parameters:
 * the first parameter is the URL you want to request;
-* the second parameter is a array of data associated to the url;
+* the second parameter can be an array, a Traversable object or a string. This is the data that will be used with the URL;
 * the third parameter is to indicate if the request must be delayed or not. By default, the request is not delayed and the value is `false` (ie: usefull when combine with `P\Iris\Batch`);
 
 Here's a simple example:
 
 ```php
 
-$request = new P\Iris\Message;
-$request->addListener(P\Iris\Message::EVENT_ON_SUCCESS, function ($res, $curl) {
+$request = new Message;
+$request->addListener(Message::EVENT_ON_SUCCESS, function ($res, $curl) {
     echo $request->getResponse();
 });
-$request->addListener(P\Iris\Message::EVENT_ON_ERROR, function ($res, $curl) {
+$request->addListener(Message::EVENT_ON_ERROR, function ($res, $curl) {
     echo $curl->getErrorCode().': '. $curl->getErrorMessage();
 });
-$request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...]);
+$request->get(
+    'http://www.example.com/path/to/my/script',
+    ['var1' => 'value2',   ...]
+);
 
 ```
 You do not need to use the `P\Iris\Message::execute` method as it is called directly by the `P\Iris\Message::get` method. If you do not want the request to be directly issue then you have to specify it using the **third argument**.
 
 ```php
 
-$request = new P\Iris\Message;
-$request->get('http://www.example.com/path/to/my/script', ['var1' => 'value2', ...], true);
+$request = new Message;
+$request->get(
+    'http://www.example.com/path/to/my/script',
+    json_encode(['var1' => 'value2', ...]),
+    true
+);
 $request->execute();
 echo $request->getResponse();
 ```
-The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or `P\Iris\Batch::execute`** to perform the request.
+The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or `[P\Iris\Batch::execute`](#performing-the-requests)** to perform the request.
 
 ### Iris\Envelope
 
@@ -187,11 +194,14 @@ This class was build to simplify parallel calls. To instantiate this class you m
 
 ```php
 <?php
-$envelope = new \P\Iris\Envelope;
+use P\Iris\Envelope;
+use P\Iris\Batch;
+
+$envelope = new Envelope;
 $envelope->setSelectTimeout(10.00);
 $evenlope->setExecTimeout(100);
-$envelope->setOption(Iris\Envelope::MAXCONNECTS, 3);
-$batch = new \P\Iris\Batch($enveloppe);
+$envelope->setOption(Envelope::MAXCONNECTS, 3);
+$batch = new Batch($enveloppe);
 ```
 
 #### Adding Request
@@ -230,4 +240,3 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 - [ignace nyamagana butera](https://github.com/nyamsprod)
 - [bertrand andres](https://youtube.com/user/BertrandAd)
-
