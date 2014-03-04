@@ -233,7 +233,7 @@ class Message extends CurlAbstract implements CurlInterface
      */
     private function formatData($data)
     {
-        if (is_scalar($data)) {
+        if (is_null($data) || is_scalar($data)) {
             return $data;
         } elseif (is_array($data)) {
             return http_build_query($data);
