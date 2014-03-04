@@ -169,7 +169,7 @@ $request->get(
 $request->execute();
 echo $request->getResponse();
 ```
-The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or `[P\Iris\Batch::execute`](#performing-the-requests)** to perform the request.
+The request is registered but not execute, **you will need to call explicitly `P\Iris\Message::execute` or [`P\Iris\Batch::execute`](#performing-the-requests)** to perform the request.
 
 ### Iris\Envelope
 
