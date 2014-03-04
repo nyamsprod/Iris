@@ -33,7 +33,7 @@ $onSuccess = function ($res, $curl) use ($curl2, $batch, $onFailure) {
                 .' fait : '.strlen($curl->getResponse())
                 .' bytes';
         });
-        $curl4->addListener(\P\Iris\Message::EVENT_ON_ERROR, $onFailure);
+        $curl4->addListener(\P\Iris\Message::EVENT_ON_FAIL, $onFailure);
         $batch->addOne($curl4);
     }
 };
@@ -46,7 +46,7 @@ $curl1
         CURLOPT_NOBODY => true,
     ])
     ->addListener(\P\Iris\Message::EVENT_ON_SUCCESS, $onSuccess)
-    ->addListener(\P\Iris\Message::EVENT_ON_ERROR, $onFailure);
+    ->addListener(\P\Iris\Message::EVENT_ON_FAIL, $onFailure);
 
 $curl2
     ->setOption([
@@ -55,9 +55,9 @@ $curl2
         CURLOPT_NOBODY => true,
     ])
     ->addListener(\P\Iris\Message::EVENT_ON_SUCCESS, $onSuccess)
-    ->addListener(\P\Iris\Message::EVENT_ON_ERROR, $onFailure);
+    ->addListener(\P\Iris\Message::EVENT_ON_FAIL, $onFailure);
 
-//cette appel va declencher l'evenement \P\Iris\Message::EVENT_ON_ERROR car l'url est mauvaise
+//cette appel va declencher l'evenement \P\Iris\Message::EVENT_ON_FAIL car l'url est mauvaise
 $curl3 = new \P\Iris\Message;
 $curl3
     ->setOption([
@@ -66,7 +66,7 @@ $curl3
         CURLOPT_NOBODY => true,
     ])
     ->addListener(\P\Iris\Message::EVENT_ON_SUCCESS, $onSuccess)
-    ->addListener(\P\Iris\Message::EVENT_ON_ERROR, $onFailure);
+    ->addListener(\P\Iris\Message::EVENT_ON_FAIL, $onFailure);
 
 $batch
     ->addOne($curl2) //on peut ajouter a batch un objet  \P\Iris\Message

@@ -87,6 +87,8 @@ The options can be changed and altered at any given times before performing the 
 
 #### Performing a request
 
+##### Using Procedural code
+
 To perform a request you need to call the `Iris\Message::execute` method.
 
 ```php
@@ -95,18 +97,23 @@ $request->setUserAgent('My beautiful user agent/1.0');
 $request->setOption(CURLOPT_URL, 'http://www.example.com');
 $request->setOption(CURLOPT_RETURNTRANSFER, true);
 $request->execute();
-$request->getResponse();
+if ($request->getErrorCode()) {
+    echo $curl->getErrorCode().': '. $curl->getErrorMessage();
+} else {
+    $status = $request->getInfo(CURLOPTINFO_HTTP_CODE); //return the Status Code
+    echo $request->getResponse();
+}
 ```
 
 You'll get access to:
 
 * the response by using the `P\Iris\Message::getResponse` method.
 * the `cURL` request information using the `P\Iris\Message::getInfo` method. This method by default return an array of all available information. If you are only interested in one value then use its `CURLINFO_*` index;
-* the `cURL` error message using `P\Iris\Message::getErrorCode` and `P\Iris\Message::getErrorMessage` methods;
+* the `cURL` errors are accessible through `P\Iris\Message::getErrorCode` and `P\Iris\Message::getErrorMessage` methods;
 
-### Using Events
+##### Using Events
 
-Another way to deal with the result of an cURL request is by using the event listener. The `\Iris\Message` comes with a simple event listener mechanism. You can register a callback function that will be executed on request success or on request error like explain below:
+Another way to deal with the result is by using event listener. The `\Iris\Message` comes with a simple event listener mechanism. You can register as many callback functions as you want and they will be executed on request success or on request error like explain below:
 
 ```php
 $request = new Message;
@@ -116,7 +123,7 @@ $request->setOption(CURLOPT_RETURNTRANSFER, true);
 $request->addListener(Message::EVENT_ON_SUCCESS, function ($res, $curl) {
     echo $curl->getInfo(CURLOPTINFO_HTTP_CODE); //return the Status Code
 });
-$request->addListener(Message::EVENT_ON_ERROR, function ($res, $curl) {
+$request->addListener(Message::EVENT_ON_FAIL, function ($res, $curl) {
     echo $curl->getErrorCode().': '. $curl->getErrorMessage();
 });
 $request->execute();
@@ -147,7 +154,7 @@ $request = new Message;
 $request->addListener(Message::EVENT_ON_SUCCESS, function ($res, $curl) {
     echo $request->getResponse();
 });
-$request->addListener(Message::EVENT_ON_ERROR, function ($res, $curl) {
+$request->addListener(Message::EVENT_ON_FAIL, function ($res, $curl) {
     echo $curl->getErrorCode().': '. $curl->getErrorMessage();
 });
 $request->get(
@@ -177,10 +184,10 @@ This class is responsible for wrapping `curl_multi_*` function. **As it is you c
 
 The sole purpose of this function is to configure how `cURL` may behave when using parallel request. You can specify:
 
-* the maximum number of parallel requests you want to perform. By default This number is `10` but you can change the number using the `setOption` method just like with the `P\Iris\Message` class  
+* the maximum number of parallel requests you want to perform. By default This number is `10` but you can change the number using the `setOption` method just like with the `P\Iris\Message` class
 **Of note:**  
     * Settings options was not possible **before PHP 5.5** 
-    * The class comes with a constant called `P\Iris\Envelope::MAXCONNECTS` the value of this value matches the value of the PHP5.5+ constant `CURLMOPT_MAXCONNECTS`. 
+    * The class comes with a constant called `P\Iris\Envelope::MAXCONNECTS` the value of this value matches the value of the PHP5.5+ constant `CURLMOPT_MAXCONNECTS` so **both constants are interchangeable**. 
 
 * to set the `selectTimeout` and the `execTimeout` used by `cURL` to perform the requests. These values can be set and get using simple getter and setter methods.   
     * The `selectTimeout` must be a float;

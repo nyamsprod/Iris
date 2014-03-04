@@ -155,7 +155,7 @@ class Batch implements Countable
             unset($this->queue[$key]);
             $this->handle->remove($curl);
 
-            $event = CurlInterface::EVENT_ON_ERROR;
+            $event = CurlInterface::EVENT_ON_FAIL;
             if ($result['result'] === CURLE_OK) {
                 $event = CurlInterface::EVENT_ON_SUCCESS;
             }

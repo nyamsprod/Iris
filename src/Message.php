@@ -118,7 +118,7 @@ class Message extends CurlAbstract implements CurlInterface
         $res = curl_exec($this->handle);
         $event = self::EVENT_ON_SUCCESS;
         if ($this->getErrorCode()) {
-            $event = self::EVENT_ON_ERROR;
+            $event = self::EVENT_ON_FAIL;
         }
         $this->dispatch($event, [$res, $this]);
 

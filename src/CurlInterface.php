@@ -18,7 +18,7 @@ interface CurlInterface
     /**
      *  On error callback
      */
-    const EVENT_ON_ERROR = 2;
+    const EVENT_ON_FAIL = 2;
 
     /**
      * Add a callable to a given event
