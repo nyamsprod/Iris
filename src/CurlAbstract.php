@@ -70,12 +70,14 @@ abstract class CurlAbstract
             throw new InvalidArgumentException('a callable function should be attached');
         }
         if (! array_key_exists($event, $this->listeners)) {
-            return;
+            return $this;
         }
         $index = array_search($listener, $this->listeners[$event], true);
         if (false !== $index) {
             unset($this->listeners[$event][$index]);
         }
+
+        return $this;
     }
 
     /**

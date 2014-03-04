@@ -35,6 +35,8 @@ interface CurlInterface
      *
      * @param scalar   $event    the event the listener is attach to
      * @param callable $listener
+     *
+     * @return self
      */
     public function removeListener($event, $listener);
 
