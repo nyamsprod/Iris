@@ -3,6 +3,8 @@
 namespace P\Iris;
 
 use RuntimeException;
+use InvalidArgumentException;
+use Traversable;
 
 /**
  * A class performing simple cURL requests
@@ -37,7 +39,10 @@ class Message extends CurlAbstract implements CurlInterface
      */
     public function setUserAgent($str)
     {
-        $this->user_agent = filter_var($str, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_STRIP_LOW));
+        $str = filter_var($str, FILTER_SANITIZE_STRING, array('flags' => FILTER_FLAG_STRIP_LOW));
+        if (! empty($str)) {
+            $this->user_agent = $str;
+        }
 
         return $this;
     }
@@ -198,13 +203,14 @@ class Message extends CurlAbstract implements CurlInterface
      *
      * @return self
      */
-    private function makeCustomRequest($action, $url, array $data = array(), $delay = false)
+    private function makeCustomRequest($action, $url, $data = null, $delay = false)
     {
         $this->options[CURLOPT_URL] = $url;
         $this->options[CURLOPT_RETURNTRANSFER] = true;
         $this->options[CURLOPT_CUSTOMREQUEST] = $action;
-        if (count($data)) {
-            $this->options[CURLOPT_POSTFIELDS] = http_build_query($data);
+        $data = $this->formatData($data);
+        if (! empty($data)) {
+            $this->options[CURLOPT_POSTFIELDS] = $data;
         }
         if (! array_key_exists(CURLOPT_HTTPHEADER, $this->options)) {
             $this->options[CURLOPT_HTTPHEADER] = array();
@@ -218,23 +224,46 @@ class Message extends CurlAbstract implements CurlInterface
     }
 
     /**
+     * format user data to add to cURL request
+     *
+     * @param  mixed  $data
+     * @return string
+     *
+     * @throws new InvalidArgumentException If the data could not be formatted
+     */
+    private function formatData($data)
+    {
+        if (is_scalar($data)) {
+            return $data;
+        } elseif (is_array($data)) {
+            return http_build_query($data);
+        } elseif ($data instanceof Traversable) {
+            return http_build_query(iterator_to_array($data));
+        } elseif (is_object($data) && method_exists($data, '__toString')) {
+            return (string) $data;
+        }
+        throw new InvalidArgumentException('the provided data could not be formatted');
+    }
+
+    /**
      * Perform a simple HTTP GET request
      *
      * @param string  $url   the URL to request
-     * @param array   $data  the data to be send
+     * @param mixed   $data  the data to be send
      * @param boolean $delay if true the call is not executed
      *
      * @return self
      */
-    public function get($url, array $data = array(), $delay = false)
+    public function get($url, $data = null, $delay = false)
     {
-        if (count($data)) {
+        $data = $this->formatData($data);
+        if (! empty($data)) {
             $query = parse_url($url, PHP_URL_QUERY);
             $separator = '?';
             if (! empty($query)) {
                 $separator = '&';
             }
-            $url .= $separator.http_build_query($data);
+            $url .= $data;
         }
         $this->options[CURLOPT_HTTPGET] = true;
         $this->options[CURLOPT_URL] = $url;
@@ -250,18 +279,19 @@ class Message extends CurlAbstract implements CurlInterface
      * Perform a simple HTTP POST request
      *
      * @param string  $url   the URL to request
-     * @param array   $data  the data to be send
+     * @param mixed   $data  the data to be send
      * @param boolean $delay if true the call is not executed
      *
      * @return self
      */
-    public function post($url, array $data = array(), $delay = false)
+    public function post($url, $data = null, $delay = false)
     {
         $this->options[CURLOPT_URL] = $url;
         $this->options[CURLOPT_RETURNTRANSFER] = true;
         $this->options[CURLOPT_POST] = true;
-        if (count($data)) {
-            $this->options[CURLOPT_POSTFIELDS] = http_build_query($data);
+        $data = $this->formatData($data);
+        if (! empty($data)) {
+            $this->options[CURLOPT_POSTFIELDS] = $data;
         }
         if (! filter_var($delay, FILTER_VALIDATE_BOOLEAN)) {
             return $this->execute();
@@ -274,12 +304,12 @@ class Message extends CurlAbstract implements CurlInterface
      * Perform a simple HTTP PUT request
      *
      * @param string  $url   the URL to request
-     * @param array   $data  the data to be send
+     * @param mixed   $data  the data to be send
      * @param boolean $delay if true the call is not executed
      *
      * @return self
      */
-    public function put($url, array $data = array(), $delay = false)
+    public function put($url, $data = null, $delay = false)
     {
         return $this->makeCustomRequest('PUT', $url, $data, $delay);
     }
@@ -288,12 +318,12 @@ class Message extends CurlAbstract implements CurlInterface
      * Perform a simple HTTP DELETE request
      *
      * @param string  $url   the URL to request
-     * @param array   $data  the data to be send
+     * @param mixed   $data  the data to be send
      * @param boolean $delay if true the call is not executed
      *
      * @return self
      */
-    public function delete($url, array $data = array(), $delay = false)
+    public function delete($url, $data = null, $delay = false)
     {
         return $this->makeCustomRequest('DELETE', $url, $data, $delay);
     }
@@ -302,12 +332,12 @@ class Message extends CurlAbstract implements CurlInterface
      * Perform a simple HTTP HEAD request
      *
      * @param string  $url   the URL to request
-     * @param array   $data  the data to be send
+     * @param mixed   $data  the data to be send
      * @param boolean $delay if true the call is not executed
      *
      * @return self
      */
-    public function head($url, array $data = array(), $delay = false)
+    public function head($url, $data = null, $delay = false)
     {
         $this->options[CURLOPT_HEADER] = true;
         $this->options[CURLOPT_NOBODY] = true;
