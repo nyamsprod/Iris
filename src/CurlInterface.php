@@ -102,7 +102,7 @@ interface CurlInterface
     /**
     * Execute the request
     *
-    * @return self
+    * @return mixed
     */
     public function execute();
 

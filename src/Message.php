@@ -122,7 +122,7 @@ class Message extends CurlAbstract implements CurlInterface
         }
         $this->dispatch($event, [$res, $this]);
 
-        return $this;
+        return $res;
     }
 
     /**

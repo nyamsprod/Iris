@@ -211,6 +211,6 @@ class Envelope extends CurlAbstract implements CurlInterface
             usleep($this->execTimeout);
         } while ($running > 0);
 
-        return $this;
+        return true;
     }
 }
