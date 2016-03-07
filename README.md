@@ -1,3 +1,5 @@
+**THIS PACKAGE IS ABANDONNED PLEASE USE A MORE MODERN APPROACH LIKE [guzzle](https://github.com/guzzle/guzzle)**
+
 #Iris
 
 `Iris` is a simple library that wrap `cURL` functions to ease their use. [Iris] can dot that using a simple OOP approach to `cURL`.
